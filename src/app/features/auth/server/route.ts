@@ -1,16 +1,15 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod";
+import { loginSchema } from "../schemas";
 
 const app = new Hono()
     .post(
         "/login",
-        zValidator("json", z.object({
-            email: z.string().email(),
-            password: z.string(),
-        })),
-        (c) => {
-            return c.json({ success: "ok" });
+        zValidator("json", loginSchema),
+        async (c) => {
+            const{email , password} = c.req.valid("json");
+            console.log({email , password})
+             return c.json({ email , password });
         })
 
 export default app;
